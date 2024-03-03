@@ -3,8 +3,10 @@ const dotenv = require("dotenv");
 const { chats } = require("./data/data");
 const app = express();
 const cors = require("cors");
+const connectDB = require("./config/db");
 
 dotenv.config();
+connectDB();
 app.use(cors());
 
 app.get("/", (req, res) => {
