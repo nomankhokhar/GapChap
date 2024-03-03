@@ -14,7 +14,7 @@ const ChatPage = () => {
   }, []);
   return (
     <div>
-      ChatPage :{" "}
+      ChatPage :
       {chats?.map((chat, index) => (
         <h2 key={index}>{chat.chatName}</h2>
       ))}
