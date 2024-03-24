@@ -3,6 +3,10 @@ import React, { useState } from "react";
 import { VStack } from "@chakra-ui/react";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
+import { useToast } from "@chakra-ui/toast";
+import axios from "axios";
+import { useNavigate } from 'react-router-dom';
+
 
 const Login = () => {
   const [show, setShow] = useState(false);
@@ -11,7 +15,61 @@ const Login = () => {
   const [password, setPassword] = useState();
   const [loading, setLoading] = useState(false);
 
-  const submitHandler = () => {};
+
+  const toast = useToast();
+  const navigate = useNavigate();
+
+
+  const submitHandler = async  () => {
+    setLoading(true);
+    if (!email || !password) {
+      toast({
+        title: "Please Fill all the Feilds",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
+      const { data } = await axios.post(
+        "http://localhost:5000/api/user/login",
+        { email, password },
+        config
+      );
+
+      toast({
+        title: "Login Successful",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      // setUser(data);
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      setLoading(false);
+      navigate("/chats");
+    } catch (error) {
+      toast({
+        title: "Error Occured!",
+        description: error.response.data.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+    }
+  };
   return (
     <VStack spacing="10px">
       <FormControl id="email" isRequired>
@@ -56,6 +114,7 @@ const Login = () => {
           setEmail("guest@example.com");
           setPassword("123456");
         }}
+        isLoading={loading}
       >
         Get Guest User Credentials
       </Button>
