@@ -46,8 +46,10 @@ const allMessages = asyncHandler(async (req, res) => {
             'name pic'
         ).populate('chat');
 
+        res.json(message);
     } catch (error) {
-        
+        res.status(400)
+        throw new Error(error.message);
     }
 })
 
