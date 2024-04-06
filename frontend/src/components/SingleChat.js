@@ -1,13 +1,13 @@
 import { FormControl } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
 import { Box, Text } from "@chakra-ui/layout";
-// import "./styles.css";
+import "./styles.css";
 import { IconButton, Spinner, useToast } from "@chakra-ui/react";
 import { getSender, getSenderFull } from "../config/ChatLogics";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ArrowBackIcon } from "@chakra-ui/icons";
-// import ScrollableChat from "./ScrollableChat";
+import ScrollableChat from "./ScrollableChat";
 // import Lottie from "react-lottie";
 import { ChatState } from "../Context/ChatProvider";
 import UpdateGroupChatModal from "./miscellanenious/UpdateGroupChatModal";
@@ -57,8 +57,7 @@ const SingleChat = ({ fetchAgain , setFetchAgain}) => {
       );
       setMessages(data);
       setLoading(false);
-
-      socket.emit("join chat", selectedChat._id);
+      // socket.emit("join chat", selectedChat._id);
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -72,37 +71,37 @@ const SingleChat = ({ fetchAgain , setFetchAgain}) => {
   };
 
   const sendMessage = async (event) => {
-    // if (event.key === "Enter" && newMessage) {
-    //   socket.emit("stop typing", selectedChat._id);
-    //   try {
-    //     const config = {
-    //       headers: {
-    //         "Content-type": "application/json",
-    //         Authorization: `Bearer ${user.token}`,
-    //       },
-    //     };
-    //     setNewMessage("");
-    //     const { data } = await axios.post(
-    //       "http://localhost:5000/api/message",
-    //       {
-    //         content: newMessage,
-    //         chatId: selectedChat,
-    //       },
-    //       config
-    //     );
-    //     socket.emit("new message", data);
-    //     setMessages([...messages, data]);
-    //   } catch (error) {
-    //     toast({
-    //       title: "Error Occured!",
-    //       description: "Failed to send the Message",
-    //       status: "error",
-    //       duration: 5000,
-    //       isClosable: true,
-    //       position: "bottom",
-    //     });
-    //   }
-    // }
+    if (event.key === "Enter" && newMessage) {
+      // socket.emit("stop typing", selectedChat._id);
+      try {
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        };
+        setNewMessage("");
+        const { data } = await axios.post(
+          "http://localhost:5000/api/message",
+          {
+            content: newMessage,
+            chatId: selectedChat,
+          },
+          config
+        );
+        // socket.emit("new message", data);
+        setMessages([...messages, data]);
+      } catch (error) {
+        toast({
+          title: "Error Occured!",
+          description: "Failed to send the Message",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+      }
+    }
   };
 
   // useEffect(() => {
@@ -111,16 +110,13 @@ const SingleChat = ({ fetchAgain , setFetchAgain}) => {
   //   socket.on("connected", () => setSocketConnected(true));
   //   socket.on("typing", () => setIsTyping(true));
   //   socket.on("stop typing", () => setIsTyping(false));
-
-  //   // eslint-disable-next-line
   // }, []);
 
-  // useEffect(() => {
-  //   fetchMessages();
+  useEffect(() => {
+    fetchMessages();
 
-  //   selectedChatCompare = selectedChat;
-  //   // eslint-disable-next-line
-  // }, [selectedChat]);
+    selectedChatCompare = selectedChat;
+  }, [selectedChat]);
 
   // useEffect(() => {
   //   socket.on("message recieved", (newMessageRecieved) => {
@@ -190,9 +186,9 @@ const SingleChat = ({ fetchAgain , setFetchAgain}) => {
                 <>
                   {selectedChat.chatName.toUpperCase()}
                   <UpdateGroupChatModal
-                    fetchMessages={fetchMessages}
                     fetchAgain={fetchAgain}
                     setFetchAgain={setFetchAgain}
+                    fetchMessages={fetchMessages}
                   />
                 </>
               ))
@@ -217,10 +213,9 @@ const SingleChat = ({ fetchAgain , setFetchAgain}) => {
                 alignSelf={"center"}
                 margin={"auto"}
               />
-            ) : (
-              <div>
-              {/* Messages */}
-              </div>
+            ) : (  <div className="messages">
+            <ScrollableChat messages={messages} />
+          </div>
             )}
 
 <FormControl
