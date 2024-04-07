@@ -49,7 +49,6 @@ const ScrollableChat = ({ messages }) => {
         </div>
       ))}
   </ScrollableFeed>
-
   )
 }
 
