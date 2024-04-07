@@ -38,7 +38,7 @@ const io = require("socket.io")(server, {
 })
 
 io.on("connection", (socket) => {
-  console.log("connedted to socket.io");
+  console.log("connected to socket.io");
 
   socket.on("setup", (userData) => {
     socket.join(userData._id);
@@ -49,6 +49,9 @@ io.on("connection", (socket) => {
     socket.join(room);
     console.log("A user joined chat room: " + room);
   })
+
+  socket.on('typing', (room) => socket.in(room).emit('typing'));
+  socket.on('stop typing', (room) => socket.in(room).emit('stop typing'));
 
   socket.on("new message", (newMessageRecieved) => {
     var chat = newMessageRecieved.chat;
