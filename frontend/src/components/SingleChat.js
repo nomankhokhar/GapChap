@@ -35,7 +35,7 @@ const SingleChat = ({ fetchAgain , setFetchAgain}) => {
     rendererSettings: {
       preserveAspectRatio: "xMidYMid slice",
     },
-  };
+  };  
   const { selectedChat, setSelectedChat, user } =
     ChatState();
 
