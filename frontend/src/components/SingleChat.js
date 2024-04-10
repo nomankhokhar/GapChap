@@ -177,7 +177,7 @@ const SingleChat = ({ fetchAgain , setFetchAgain}) => {
               icon={<ArrowBackIcon />}
               onClick={() => setSelectedChat("")}
             />
-             {true &&
+             {messages &&
               (!selectedChat.isGroupChat ? (
                 <>
                   {getSender(user, selectedChat.users)}
@@ -221,7 +221,7 @@ const SingleChat = ({ fetchAgain , setFetchAgain}) => {
           </div>
             )}
 
-<FormControl
+            <FormControl
               onKeyDown={sendMessage}
               id="first-name"
               isRequired
