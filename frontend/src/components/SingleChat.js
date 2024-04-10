@@ -19,7 +19,6 @@ const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain , setFetchAgain}) => {
-  
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
@@ -35,8 +34,8 @@ const SingleChat = ({ fetchAgain , setFetchAgain}) => {
     rendererSettings: {
       preserveAspectRatio: "xMidYMid slice",
     },
-  };  
-  const { selectedChat, setSelectedChat, user , notification , setNotification } =
+  };
+  const { selectedChat, setSelectedChat, user, notification, setNotification } =
     ChatState();
 
   const fetchMessages = async () => {
@@ -57,7 +56,8 @@ const SingleChat = ({ fetchAgain , setFetchAgain}) => {
       );
       setMessages(data);
       setLoading(false);
-      // socket.emit("join chat", selectedChat._id);
+
+      socket.emit("join chat", selectedChat._id);
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -110,12 +110,15 @@ const SingleChat = ({ fetchAgain , setFetchAgain}) => {
     socket.on("connected", () => setSocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
+
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     fetchMessages();
 
     selectedChatCompare = selectedChat;
+    // eslint-disable-next-line
   }, [selectedChat]);
 
   useEffect(() => {
@@ -228,9 +231,9 @@ const SingleChat = ({ fetchAgain , setFetchAgain}) => {
                 <div>
                   <Lottie
                     options={defaultOptions}
-                    // height={50}
-                    width={70}
-                    style={{ marginBottom: 15, marginLeft: 0 }}
+                    height={25}
+                    width={55}
+                    style={{ marginBottom: 15, marginLeft: 10 }}
                   />
                 </div>
               ) : (
