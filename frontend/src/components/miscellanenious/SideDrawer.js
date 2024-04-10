@@ -25,8 +25,8 @@ import ProfileModal from './ProfileModal';
 import axios from "axios";
 import ChatLoading from "../ChatLoading";
 import { Spinner } from "@chakra-ui/spinner";
-// import NotificationBadge from "react-notification-badge";
-// import { Effect } from "react-notification-badge";
+import NotificationBadge from "react-notification-badge";
+import { Effect } from "react-notification-badge";
 import { getSender } from "../../config/ChatLogics";
 import { useNavigate } from 'react-router-dom';
 import UserListItem from '../UserAvatar/UserListItem';
@@ -147,6 +147,10 @@ const SideDrawer = () => {
        <div>
        <Menu>
             <MenuButton p={1}>
+            <NotificationBadge
+                count={notification.length}
+                effect={Effect.SCALE}
+              />
                 <BellIcon />
             </MenuButton>
             <MenuList pl={2}>
@@ -155,6 +159,7 @@ const SideDrawer = () => {
                 (
                   <MenuItem key={notifi._id} onClick={()=>{
                     setSelectedChat(notifi.chat)
+                    setNotification(notification.filter(n => n !== notifi))
                   }}>
                     {notifi.chat.isGroupChat ? `New Message in ${notifi.chat.chatName}` : 
                     `New Message from ${getSender(user, notifi.chat.users)}`}
