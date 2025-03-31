@@ -5,8 +5,7 @@ import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [show, setShow] = useState(false);
@@ -66,14 +65,14 @@ const Signup = () => {
   };
   const submitHandler = async () => {
     setLoading(true);
-    if(!name || !email || !password || !confirmpassword || !pic){
+    if (!name || !email || !password || !confirmpassword || !pic) {
       toast({
         title: "Please fill all the fields!",
         status: "warning",
         duration: 5000,
         isClosable: true,
-        position : "bottom",
-      })
+        position: "bottom",
+      });
       setLoading(false);
       return;
     }
@@ -86,6 +85,7 @@ const Signup = () => {
         isClosable: true,
         position: "bottom",
       });
+      setLoading(false);
       return;
     }
 
@@ -96,7 +96,7 @@ const Signup = () => {
         },
       };
       const { data } = await axios.post(
-        "http://localhost:5000/api/user",
+        "http://localhost:5000/api/user", // Consider using environment variables here
         {
           name,
           email,
@@ -115,16 +115,39 @@ const Signup = () => {
       });
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
-      navigate('/chats');
+      navigate("/chats");
     } catch (error) {
-      toast({
-        title: "Error Occured!",
-        description: error.response.data.message,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom",
-      });
+      if (error.response) {
+        // Server responded with an error status
+        toast({
+          title: "Error Occurred!",
+          description: error.response.data.message,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+      } else if (error.request) {
+        // Request was made but no response was received
+        toast({
+          title: "Network Error!",
+          description: "Could not connect to the server.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+      } else {
+        // Something else happened while setting up the request
+        toast({
+          title: "Unexpected Error!",
+          description: error.message,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+      }
       setLoading(false);
     }
   };
@@ -191,7 +214,6 @@ const Signup = () => {
         style={{ marginTop: 15 }}
         onClick={submitHandler}
         isLoading={loading}
-        
       >
         Sign Up
       </Button>
