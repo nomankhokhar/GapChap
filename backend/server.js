@@ -19,8 +19,8 @@ app.use('/api/message', messageRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-app.get("/", (req, res) => {
-  res.send("API is Running");
+app.get("/ping", (req, res) => {
+  res.json({ message: "pong" });
 });
 
 
